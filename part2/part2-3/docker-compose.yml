@@ -1,0 +1,18 @@
+version: '3.5'  
+
+services:
+  backend:
+    image: pvbosamiya/docker-compose-backend
+    build: ../../Part1/Part1-11/.
+    ports:
+      - 8000:8000
+    environment:
+      - FRONT_URL=http://localhost:5000
+  
+  frontend:
+    image: pvbosamiya/docker-compose-frontned
+    build: ../../Part1/Part1-10/.
+    ports:
+      - 5000:5000
+    environment:
+      - API_URL=http://localhost:8000
