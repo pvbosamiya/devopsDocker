@@ -1,0 +1,43 @@
+version: '3.5'  
+
+services:
+  db-backend:
+    image: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: part2-6
+      POSTGRES_PASSWORD: example
+    container_name: db_part2-6
+    volumes:
+      - database:/var/lib/postgresql/data
+
+  backend:
+    image: pvbosamiya/docker-compose-backend
+    build: ../../Part1/Part1-11/.
+    ports:
+      - 8000:8000
+    environment:
+      - FRONT_URL=http://localhost:5000
+      - DB_USERNAME=part2-6
+      - DB_PASSWORD=example
+      - DB_HOST=db-backend
+    container_name: backend
+  
+  frontend:
+    image: pvbosamiya/docker-compose-frontned
+    build: ../../Part1/Part1-10/.
+    ports:
+      - 5000:5000
+    environment:
+      - API_URL=http://localhost:8000
+    container_name: frontend
+
+  proxy:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"
+
+volumes:
+  database:
